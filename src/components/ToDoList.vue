@@ -11,7 +11,7 @@
         <li v-for="todo in todos" :key="todo.id" class="todo-item">
           <p class="todo-text">{{ todo.todo }}</p>
           <div>
-            <button class="todo-update">up</button>
+            <button class="todo-update">upaa</button>
             <button class="todo-delete" @click="deleteTodo(todo.id)">del</button>
           </div>
         </li>
