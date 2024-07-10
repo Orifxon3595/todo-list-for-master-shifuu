@@ -7,7 +7,7 @@
         <input type="text">
         <input type="text">
         <input type="text">
-        <button>Sign Up</button>
+        <button>Sign Upgg</button>
     </form>
   </div>
 </template>
