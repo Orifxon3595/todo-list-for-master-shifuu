@@ -2,17 +2,17 @@
   <div class="todo-wrap">
     <form @submit.prevent="addTodo">
       <div class="todo-form">
-        <input class="todo-input" type="text" v-model="todo" />
+        <input class="todo-input" type="text" v-model="newTodo.todo" />
         <button class="todo-create-btn" type="submit">Add</button>
       </div>
     </form>
     <div class="todo-box">
       <ul class="todo-items">
-        <li v-for="todo in todos" :key="todo" class="todo-item">
-          <p class="todo-text">{{todo}}</p>
+        <li v-for="todo in todos" :key="todo.id" class="todo-item">
+          <p class="todo-text">{{ todo.todo }}</p>
           <div>
             <button class="todo-update">up</button>
-            <button class="todo-delete">del</button>
+            <button class="todo-delete" @click="deleteTodo(todo.id)">del</button>
           </div>
         </li>
       </ul>
@@ -21,26 +21,60 @@
 </template>
 
 <script>
-import {ref} from 'vue'
-export default {
-    setup() {
-        const todo = ref('')
-        const todos = ref(JSON.parse(localStorage.getItem('list')) ? JSON.parse(localStorage.getItem('list')) : [])
+import { ref, onMounted } from 'vue';
+import APITodo from '@/api/apiToDo';
 
-        return{todo, todos}
-    },
-    methods: {
-        addTodo(){
-            if(this.todo){
-                this.todos.push(this.todo)
-                this.todo = ''
-                localStorage.setItem('list', JSON.stringify(this.todos))
-            }
-        }
-    }
-    
+export default {
+  setup() {
+    const newTodo = ref({
+      id: '',
+      todo: '',
+      completed: '',
+    });
+    const todos = ref([]);
+
+    const fetchData = async () => {
+      try {
+        const response = await APITodo.getTodo();
+        todos.value = response.todos;
+        console.log(todos.value);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const addTodo = async () => {
+      try {
+        const addedTodo = await APITodo.postTodo(newTodo.value);
+        console.log(addedTodo);
+        todos.value.push(addedTodo);  
+        newTodo.value.description = "";
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const deleteTodo = async (id) => {
+      try {
+        await APITodo.deleteTodo(id);
+        todos.value = todos.value.filter(todo => todo.id !== id);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    onMounted(fetchData);
+
+    return {
+      newTodo,
+      todos,
+      addTodo,
+      deleteTodo
+    };
+  }
 };
 </script>
+
 
 <style>
 .todo-wrap {
