@@ -1,0 +1,72 @@
+<template>
+  <div class="navContainer">
+    <div class="navItem">
+      <div>
+        <h1>ToDo</h1>
+      </div>
+      <div class="userBox">
+        <div class="navImgBox">
+          <!-- <img class="navUserImg" src="../assets/user.png" alt="" /> -->
+        </div>
+        <div class="userDrop">
+          <span>user</span>
+          <span>v</span>
+          <div class="dropItem">
+            <a href="#">Taxrirlash</a><br>
+            <button>Chiqish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style>
+.navContainer {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+.navItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navImgBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  border: 1px solid #4d4d4d;
+}
+.userBox {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+/* .navUserImg{
+    width: 100%;
+    object-fit: contain;
+    border-radius: 100%;
+} */
+.userDrop {
+  position: relative;
+  display: inline-block;
+}
+.dropItem {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.userDrop:hover .dropItem{
+    display: block;
+}
+</style>

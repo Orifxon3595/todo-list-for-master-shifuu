@@ -1,18 +1,35 @@
 <template>
   <div class="todo-wrap">
     <form @submit.prevent="addTodo">
-      <div class="todo-form">
-        <input class="todo-input" type="text" v-model="newTodo.todo" />
-        <button class="todo-create-btn" type="submit">Add</button>
+      <div class="">
+        <div>
+          <label for="title">Title</label>
+          <input type="text" v-model="newTodo.title" id="title" />
+        </div>
+        <div>
+          <label for="description">Description</label><br />
+          <textarea
+            type="text"
+            v-model="newTodo.description"
+            id="description"
+          ></textarea>
+        </div>
+        <button class="todo-create-btn" type="submit">
+          {{ !edit ? "Add" : "Edit" }}
+        </button>
       </div>
+      <p>{{ idData }}</p>
     </form>
     <div class="todo-box">
       <ul class="todo-items">
         <li v-for="todo in todos" :key="todo.id" class="todo-item">
-          <p class="todo-text">{{ todo.todo }}</p>
+          <p class="todo-text">{{ todo.title }}</p>
+          <!-- <p>{{ todo.description }}</p> -->
           <div>
-            <button class="todo-update">up</button>
-            <button class="todo-delete" @click="deleteTodo(todo.id)">del</button>
+            <button class="todo-update" @click="handleEdit(todo.id)">up</button>
+            <button class="todo-delete" @click="deleteTodo(todo.id)">
+              del
+            </button>
           </div>
         </li>
       </ul>
@@ -21,23 +38,26 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import APITodo from '@/api/apiToDo';
+import { ref, onMounted } from "vue";
+import APITodo from "@/api/apiToDo";
 
 export default {
   setup() {
     const newTodo = ref({
-      id: '',
-      todo: '',
-      completed: '',
+      title: "",
+      description: "",
+      is_done: true,
     });
+
+    const edit = ref(false);
+    const idData = ref(null);
+
     const todos = ref([]);
 
     const fetchData = async () => {
       try {
         const response = await APITodo.getTodo();
-        todos.value = response.todos;
-        console.log(todos.value);
+        todos.value = response.results;
       } catch (error) {
         console.error(error);
       }
@@ -45,10 +65,23 @@ export default {
 
     const addTodo = async () => {
       try {
-        const addedTodo = await APITodo.postTodo(newTodo.value);
-        console.log(addedTodo);
-        todos.value.push(addedTodo);  
-        newTodo.value.description = "";
+        if (!edit.value) {
+          const addedTodo = await APITodo.postTodo(newTodo.value);
+          todos.value.push(addedTodo);
+        } else {
+          const updatedTodo = await APITodo.putTodo(
+            idData.value,
+            newTodo.value
+          );
+          const index = todos.value.findIndex(
+            (todo) => todo.id === idData.value
+          );
+          if (index !== -1) {
+            todos.value.splice(index, 1, updatedTodo)
+          }
+          edit.value = false;
+        }
+        newTodo.value = "";
       } catch (error) {
         console.error(error);
       }
@@ -57,24 +90,39 @@ export default {
     const deleteTodo = async (id) => {
       try {
         await APITodo.deleteTodo(id);
-        todos.value = todos.value.filter(todo => todo.id !== id);
+        todos.value = todos.value.filter((todo) => todo.id !== id);
       } catch (error) {
         console.error(error);
+      }
+    };
+
+    const handleEdit = (id) => {
+      edit.value = true;
+      idData.value = id;
+      const data = todos.value.find((item) => item.id === id);
+      if (data) {
+        newTodo.value = {
+          title: data.title,
+          description: data.description,
+          is_done: true,
+        };
       }
     };
 
     onMounted(fetchData);
 
     return {
+      idData,
       newTodo,
       todos,
+      edit,
       addTodo,
-      deleteTodo
+      deleteTodo,
+      handleEdit,
     };
-  }
+  },
 };
 </script>
-
 
 <style>
 .todo-wrap {
@@ -127,10 +175,10 @@ ul {
   background: #e3ebfac0;
   box-shadow: 2px 2px 20px 1px rgba(173, 173, 173, 0.151);
 }
-.todo-text{
-    font-size: 16px;
-    font-weight: 600;
-    color: #606f7a;
+.todo-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #606f7a;
 }
 .todo-update {
   font-size: 16px;

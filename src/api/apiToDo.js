@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance'
 
-const endPoint = 'todos'
+const endPoint = 'todos/'
 
 const getTodo = async () => {
     try {
