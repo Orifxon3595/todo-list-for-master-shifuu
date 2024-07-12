@@ -77,11 +77,15 @@ export default {
             (todo) => todo.id === idData.value
           );
           if (index !== -1) {
-            todos.value.splice(index, 1, updatedTodo)
+            todos.value.splice(index, 1, updatedTodo);
           }
           edit.value = false;
         }
-        newTodo.value = "";
+        newTodo.value = {
+          title: "",
+          description: "",
+          is_done: true,
+        };
       } catch (error) {
         console.error(error);
       }

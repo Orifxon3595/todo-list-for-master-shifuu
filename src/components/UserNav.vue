@@ -12,8 +12,8 @@
           <span>user</span>
           <span>v</span>
           <div class="dropItem">
-            <a href="#">Taxrirlash</a><br>
-            <button>Chiqish</button>
+            <a href="/userupdate">Taxrirlash</a><br>
+            <button @click="handleUpdate">Chiqish</button>
           </div>
         </div>
       </div>
@@ -22,7 +22,19 @@
 </template>
 
 <script>
-export default {};
+import router from '@/router';
+
+
+export default {
+  setup(){
+    const handleUpdate = () => {
+      localStorage.removeItem('token')
+      router.push('/login')
+    }
+
+    return {handleUpdate}
+  }
+};
 </script>
 
 <style>
