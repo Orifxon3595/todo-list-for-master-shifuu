@@ -1,37 +1,37 @@
 <template>
-  <div class="signUp-box">
-    <form @submit.prevent="signup">
-      <div>
-        <label for="email">Email</label>
-        <input type="text" v-model="form.email" id="email" />
-      </div>
-      <div>
-        <label for="first_name">Firstname</label>
-        <input type="text" v-model="form.first_name" id="first_name" />
-      </div>
-      <div>
-        <label for="last_name">Lastname</label>
-        <input type="text" v-model="form.last_name" id="last_name" />
-      </div>
-      <div>
-        <label for="username">Username</label>
-        <input type="text" v-model="form.username" id="username" />
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" v-model="form.password" id="password" />
-      </div>
-      <div>
-        <label for="re_password">Reset password</label>
-        <input type="password" v-model="form.re_password" id="re_password" />
-      </div>
-      <div>
-        <button type="submit">Sign Up</button>
-      </div>
-      <div>
-        <p>Allaqachon azomisiz?<a href="/login">Login</a></p>
-      </div>
-    </form>
+  <div class="signupContainer">
+    <div class="signupBox">
+      <form @submit.prevent="signup">
+        <h3 class="loginTitle">Signup</h3>
+        <div class="signupInput">
+          <input type="text" v-model="form.email" id="email" placeholder="Email"/>
+        </div>
+        <div class="signupInput">
+          <input type="text" v-model="form.first_name" id="first_name" placeholder="Firstname">
+        </div>
+        <div class="signupInput">
+          <input type="text" v-model="form.last_name" id="last_name" placeholder="Lastname"/>
+        </div>
+        <div class="signupInput">
+          <input type="text" v-model="form.username" id="username" placeholder="Username"/>
+        </div>
+        <div class="signupInput">
+          <input type="password" v-model="form.password" id="password" placeholder="Password"/>
+        </div>
+        <div class="signupInput">
+          <input type="password" v-model="form.re_password" id="re_password" placeholder="Retype password"/>
+        </div>
+        <div>
+          <button class="signupBtn" type="submit">Sign Up</button>
+        </div>
+        <div class="signupLoginText">
+          <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+      </form>
+    </div>
+    <div class="signupImgBox">
+      <img class="signupImg" src="../assets/login1.png" alt="" />
+    </div>
   </div>
 </template>
 
@@ -69,19 +69,78 @@ export default {
 </script>
 
 <style>
-.signUp-box {
-  max-width: 500px;
+.signupContainer {
+  max-width: 1224px;
+  padding: 0 20px;
+  height: 90vh;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 50px;
+  align-items: center;
+  align-content: center;
 }
-/*form {
-  max-width: 100%;
-  /* background: bisque;
-  padding: 20px;
+.signupBox {
+  max-width: 500px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 12px 12px 2px 1px rgba(0, 70, 251, 0.2);
 }
-input {
-  width: 100%;
-  padding: 5px;
-  display: block;
-  margin-bottom: 10px;
-} */
+.signupTitle {
+  font-size: x-large;
+  text-align: center;
+  margin: 5px 0;
+  color: rgb(44, 44, 44);
+}
+
+/* Form styles */
+.signupInput input {
+  width: 90%;
+  display: inline-block;
+  font-size: 15px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  border: 0;
+  border-bottom: 1px solid #cccccc50;
+  box-sizing: border-box;
+  outline: none;
+}
+.signupInput input:focus {
+  border-bottom: 2px solid #5581e2;
+  background-color: rgba(0, 71, 251, 0.075);
+}
+.signupBtn {
+  width: 90%;
+  padding: 4px 30px;
+  margin-top: 25px;
+  border-radius: 10px;
+  border: 2px solid #5581e2;
+  background-color: #5581e2;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+}
+.signupBtn:active {
+    border: 2px solid #5581e2;
+    background-color: #ffffff;
+    color: #5581e2;
+}
+
+/* Image styles */
+.signupImgBox {
+  text-align: right;
+}
+.signupImg {
+  width: 500px;
+}
+.signupLoginText{
+    margin-top: 25px;
+    font-size: 15px;
+}
+.signupLoginText a{
+    text-decoration: none;
+    color: #5581e2;
+}
 </style>

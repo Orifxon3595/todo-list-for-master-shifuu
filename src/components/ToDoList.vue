@@ -1,35 +1,67 @@
 <template>
-  <div class="todo-wrap">
-    <form @submit.prevent="addTodo">
-      <div class="">
-        <div>
-          <label for="title">Title</label>
-          <input type="text" v-model="newTodo.title" id="title" />
-        </div>
-        <div>
-          <label for="description">Description</label><br />
-          <textarea
-            type="text"
-            v-model="newTodo.description"
-            id="description"
-          ></textarea>
-        </div>
-        <button class="todo-create-btn" type="submit">
-          {{ !edit ? "Add" : "Edit" }}
-        </button>
-      </div>
-      <p>{{ idData }}</p>
-    </form>
-    <div class="todo-box">
-      <ul class="todo-items">
-        <li v-for="todo in todos" :key="todo.id" class="todo-item">
-          <p class="todo-text">{{ todo.title }}</p>
-          <!-- <p>{{ todo.description }}</p> -->
+  <div class="todoContainer">
+    <div class="todoFormBox">
+      <form @submit.prevent="addTodo">
+        <div class="">
+          <div class="todoInputBox">
+            <input
+              type="text"
+              v-model="newTodo.title"
+              id="title"
+              placeholder="Title"
+            />
+          </div>
           <div>
-            <button class="todo-update" @click="handleEdit(todo.id)">up</button>
-            <button class="todo-delete" @click="deleteTodo(todo.id)">
-              del
-            </button>
+            <textarea
+              placeholder="Description"
+              type="text"
+              v-model="newTodo.description"
+              id="description"
+            ></textarea>
+          </div>
+          <button class="todoBtn" type="submit">
+            {{ !edit ? "Add" : "Edit" }}
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="todoBox">
+      <ul class="todo-items">
+        <li v-for="todo in todos" :key="todo.id" class="todoItem">
+          <div class="itemLi">
+            <div class="checkParBox">
+              <input
+                type="checkbox"
+                v-model="todo.is_done"
+                @click="isDisabled(todo.id)"
+                :class="{ disabled: todo.is_done }"
+              />
+              <p
+                class="todoText"
+                @click="toggleDescription(todo.id)"
+                :class="{ disabledTodoText: todo.is_done }"
+              >
+                {{ todo.title }}
+              </p>
+            </div>
+            <div>
+              <button
+                class="todo-update"
+                :class="{ disabledBtnUp: todo.is_done }"
+                @click.stop="handleEdit(todo.id)"
+              >
+                up
+              </button>
+              <button class="todo-delete" @click.stop="deleteTodo(todo.id)">
+                del
+              </button>
+            </div>
+          </div>
+          <div class="itemDesBox" v-show="showDescription === todo.id">
+            <p class="itemDescription">
+              <span class="descriptionTitle">Description:</span
+              >{{ todo.description }}
+            </p>
           </div>
         </li>
       </ul>
@@ -46,13 +78,13 @@ export default {
     const newTodo = ref({
       title: "",
       description: "",
-      is_done: true,
+      is_done: false,
     });
 
     const edit = ref(false);
     const idData = ref(null);
-
     const todos = ref([]);
+    const showDescription = ref(null);
 
     const fetchData = async () => {
       try {
@@ -84,7 +116,7 @@ export default {
         newTodo.value = {
           title: "",
           description: "",
-          is_done: true,
+          is_done: false,
         };
       } catch (error) {
         console.error(error);
@@ -92,6 +124,7 @@ export default {
     };
 
     const deleteTodo = async (id) => {
+      showDescription.value = null;
       try {
         await APITodo.deleteTodo(id);
         todos.value = todos.value.filter((todo) => todo.id !== id);
@@ -108,8 +141,32 @@ export default {
         newTodo.value = {
           title: data.title,
           description: data.description,
-          is_done: true,
+          is_done: data.is_done,
         };
+      }
+    };
+
+    const toggleDescription = (id) => {
+      if (showDescription.value === id) {
+        showDescription.value = null;
+      } else {
+        showDescription.value = id;
+      }
+    };
+
+    const isDisabled = async (id) => {
+      const data = todos.value.find((item) => item.id === id);
+      if (data) {
+        const newData = {
+          title: data.title,
+          description: data.description,
+          is_done: data.is_done ? false : true,
+        };
+        const updatedCheck = await APITodo.putTodo(data.id, newData);
+        const index = todos.value.findIndex((todo) => todo.id === id);
+        if (index !== -1) {
+          todos.value.splice(index, 1, updatedCheck);
+        }
       }
     };
 
@@ -120,68 +177,133 @@ export default {
       newTodo,
       todos,
       edit,
+      showDescription,
       addTodo,
       deleteTodo,
       handleEdit,
+      toggleDescription,
+      isDisabled,
     };
   },
 };
 </script>
 
 <style>
-.todo-wrap {
-  max-width: 700px;
+.disabled {
+  opacity: 0.5;
+}
+.disabledTodoText{
+  opacity: 0.5;
+  pointer-events: none;
+  text-decoration: line-through;
+}
+.disabledBtnUp {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.todoContainer {
+  max-width: 1224px;
+  padding: 0 20px;
+  /* height: 90vh; */
   margin: 0 auto;
-  padding: 20px;
-}
-.todo-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 50% 50%;
   gap: 10px;
-  border-radius: 20px;
-  padding: 10px 20px;
-  background: white;
-  box-shadow: 2px 2px 20px 1px rgba(0, 0, 0, 0.1);
+  align-items: start;
+  /* align-content: center; */
 }
-.todo-input {
-  width: 80%;
+.todoFormBox {
+  max-width: 500px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 12px 12px 2px 1px rgba(0, 70, 251, 0.2);
+}
+
+/* Form styles */
+.todoInputBox input,
+textarea {
+  width: 90%;
+  display: inline-block;
+  font-size: 15px;
+  padding: 12px 16px;
+  margin: 12px 0;
   border: 0;
+  border-bottom: 1px solid #cccccc50;
+  box-sizing: border-box;
   outline: none;
-  font-size: medium;
 }
-.todo-create-btn {
+.todoInputBox input:focus,
+textarea:focus {
+  border-bottom: 2px solid #5581e2;
+  background-color: rgba(0, 71, 251, 0.075);
+}
+.todoBtn {
+  width: 90%;
+  padding: 4px 30px;
+  margin-top: 25px;
+  border-radius: 10px;
+  border: 2px solid #5581e2;
+  background-color: #5581e2;
+  color: #ffffff;
   font-size: 16px;
-  font-weight: bold;
-  border: 0;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: #ae7eea;
-  color: white;
+  font-weight: 800;
 }
-.todo-box {
+.signupBtn:active {
+  border: 2px solid #5581e2;
+  background-color: #ffffff;
+  color: #5581e2;
+}
+.todoBox {
   padding: 5px 20px;
   background: white;
-  border-radius: 20px;
-  margin-top: 20px;
+  border-radius: 10px;
 }
 ul {
   padding: 0;
+  list-style: none;
 }
-.todo-item {
+.todoItem {
+  border-radius: 20px;
+  background: #e3ebfac0;
+  box-shadow: 2px 2px 20px 1px rgba(173, 173, 173, 0.151);
+  margin-bottom: 10px;
+  padding: 0 20px;
+}
+.checkParBox {
+  display: flex;
+  align-items: center;
+}
+.itemLi {
   display: flex;
   align-items: center;
   justify-content: space-between;
   list-style: none;
-  padding: 0 20px;
-  border-radius: 20px;
-  margin-bottom: 10px;
-  background: #e3ebfac0;
-  box-shadow: 2px 2px 20px 1px rgba(173, 173, 173, 0.151);
 }
-.todo-text {
+.todoText {
+  text-transform: capitalize;
   font-size: 16px;
   font-weight: 600;
+  margin-left: 10px;
+  color: #606f7a;
+}
+.todoText:hover {
+  cursor: pointer;
+  color: #5581e2;
+}
+.itemDesBox {
+  padding: 8px 0px 20px;
+}
+.descriptionTitle {
+  margin-left: 30px;
+  margin-right: 8px;
+  font-weight: 700;
+  /* color: #606f7a; */
+}
+.itemDescription {
+  margin: 0;
+  line-height: 1.6rem;
   color: #606f7a;
 }
 .todo-update {

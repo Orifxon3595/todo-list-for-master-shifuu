@@ -13,5 +13,7 @@
 }
 body{
   background: #e3ebfa;
+  margin: 0;
+  padding: 0;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="navContainer">
     <div class="navItem">
-      <div>
-        <h1>ToDo</h1>
+      <div class="navLogoBox">
+        <h1 class="navLogo">ToDo</h1>
       </div>
       <div class="userBox">
         <div class="navImgBox">
@@ -39,10 +39,12 @@ export default {
 
 <style>
 .navContainer {
-  max-width: 1024px;
-  margin: 0 auto;
+  /* background-color: #ffffff; */
+  box-shadow: 0px 10px 5px 0px rgba(0, 70, 251, 0.1);
 }
 .navItem {
+  max-width: 1024px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,6 +1,6 @@
 <template>
   <div class="loginContainer">
-    <div class="login-box">
+    <div class="loginBox">
       <form class="loginForm" @submit.prevent="login">
         <h3 class="loginTitle">Login</h3>
         <div class="loginInput">
@@ -83,7 +83,7 @@ export default {
   align-items: center;
   align-content: center;
 }
-.login-box {
+.loginBox {
   max-width: 500px;
   border-radius: 10px;
   background-color: #ffffff;
@@ -105,15 +105,16 @@ export default {
 }
 .loginInput input {
   width: 90%;
+  display: inline-block;
+  font-size: 15px;
   padding: 12px 16px;
   margin: 12px 0;
-  display: inline-block;
   border: 0;
   border-bottom: 1px solid #cccccc50;
   box-sizing: border-box;
   outline: none;
 }
-input:focus {
+.loginInput input:focus {
   border-bottom: 2px solid #5581e2;
   background-color: rgba(0, 71, 251, 0.075);
 }
@@ -143,6 +144,7 @@ input:focus {
 }
 .loginSignupText{
     margin-top: 25px;
+    font-size: 15px;
 }
 .loginSignupText a{
     text-decoration: none;
