@@ -25,12 +25,12 @@
           <button class="signupBtn" type="submit">Sign Up</button>
         </div>
         <div class="signupLoginText">
-          <p>Already have an account? <a href="/login">Login</a></p>
+          <p>Already have an account? <router-link to="/login">Login</router-link></p>
         </div>
       </form>
     </div>
     <div class="signupImgBox">
-      <img class="signupImg" src="../assets/login1.png" alt="" />
+      <img class="signupImg" src="../assets/sign-up.png" alt="Sign up page image" />
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@
 <script>
 import { ref } from "vue";
 import ApiSignup from "@/api/apiSignup";
+import router from '@/router';
 
 export default {
   setup() {
@@ -57,6 +58,7 @@ export default {
         const response = await ApiSignup.postSignup(form.value);
         message.value = "Ro'yxatdan muvaffaqqiyatli o'ttingiz";
         form.value = "";
+        router.push('/login')
       } catch (error) {
         message.value =
           "Qayta tekshiring" + (error.response?.data?.message || error.message);
@@ -133,7 +135,7 @@ export default {
   text-align: right;
 }
 .signupImg {
-  width: 500px;
+  width: 100%;
 }
 .signupLoginText{
     margin-top: 25px;

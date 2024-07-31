@@ -9,6 +9,7 @@
             v-model="form.username"
             id="username"
             placeholder="Username"
+            required
           />
         </div>
         <div class="loginInput">
@@ -17,18 +18,19 @@
             v-model="form.password"
             id="password"
             placeholder="Password"
+            required
           />
         </div>
         <div>
           <button class="loginBtn" type="submit">Login</button>
         </div>
         <div class="loginSignupText">
-          <p>Don't have an account? <a href="/signup">Signup</a></p>
+          <p>Don't have an account? <router-link to="/signup">Signup</router-link></p>
         </div>
       </form>
     </div>
     <div class="loginImgBox">
-      <img class="loginImg" src="../assets/login1.png" alt="" />
+      <img class="loginImg" src="../assets/login1.png" alt="Login page image" />
     </div>
   </div>
 </template>
@@ -52,10 +54,9 @@ export default {
       try {
         const response = await ApiLogin.postLogin(form.value);
         token.value = response.auth_token;
-        console.log(token.value);
         if (token.value) {
           localStorage.setItem("token", token.value);
-          router.push("/");
+          router.push("/todo");
         }
       } catch (error) {
         message.value = "Qayta tekshirib ko'rin";

@@ -6,13 +6,13 @@
       </div>
       <div class="userBox">
         <div class="navImgBox">
-          <!-- <img class="navUserImg" src="../assets/user.png" alt="" /> -->
+          <img class="navUserImg" src="../assets/user.png" alt="Navbar user image" />
         </div>
         <div class="userDrop">
           <span>user</span>
           <span>v</span>
           <div class="dropItem">
-            <a href="/userupdate">Taxrirlash</a><br>
+            <router-link to="/userupdate">Taxrirlash</router-link><br>
             <button @click="handleUpdate">Chiqish</button>
           </div>
         </div>
@@ -43,17 +43,11 @@ export default {
   box-shadow: 0px 10px 5px 0px rgba(0, 70, 251, 0.1);
 }
 .navItem {
-  max-width: 1024px;
+  max-width: 1124px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.navImgBox {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  border: 1px solid #4d4d4d;
 }
 .userBox {
   display: flex;
@@ -61,11 +55,22 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-/* .navUserImg{
-    width: 100%;
-    object-fit: contain;
-    border-radius: 100%;
-} */
+.navImgBox {
+  max-width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  /* border: 1px solid #4d4d4d; */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+.navUserImg{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
 .userDrop {
   position: relative;
   display: inline-block;
